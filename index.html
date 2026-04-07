@@ -1,21 +1,115 @@
+<!DOCTYPE html>
+<html>
 <head>
   <meta charset="UTF-8">
   <title>Contact</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: "Avenir Light", Avenir, sans-serif;
+      background: transparent;
+      color: #000;
+    }
+
+    .form-container {
+      max-width: 500px;
+      margin: auto;
+      padding: 40px 20px;
+      background: transparent;
+    }
+
+    input, textarea {
+      width: 100%;
+      border: none;
+      border-bottom: 1px solid #ccc;
+      padding: 10px 5px;
+      margin-top: 25px;
+      font-size: 14px;
+      font-family: "Avenir Light", Avenir, sans-serif;
+      background: transparent;
+      outline: none;
+    }
+
+    textarea {
+      resize: none;
+      height: 100px;
+    }
+
+    button {
+      margin-top: 30px;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      padding: 10px 30px;
+      border: 1px solid #000;
+      background: transparent;
+      font-family: "Avenir Light", Avenir, sans-serif;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #000;
+      color: #fff;
+    }
+
+    .success-message {
+      text-align: center;
+      margin-top: 20px;
+      display: none;
+    }
+  </style>
 </head>
 
 <body>
 
-<form action="https://api.web3forms.com/submit" method="POST">
+<div class="form-container">
 
-  <input type="hidden" name="access_key" value="6baf5fb5-3a3c-4ec0-8b78-7d2e65be2cfe">
+  <form id="form">
+    <input type="hidden" name="access_key" value="6baf5fb5-3a3c-4ec0-8b78-7d2e65be2cfe">
+    <input type="hidden" name="subject" value="New Contact Submission">
+    <input type="checkbox" name="botcheck" style="display:none;">
 
-  <input type="text" name="name" placeholder="Name" required><br><br>
-  <input type="email" name="email" placeholder="Email" required><br><br>
-  <textarea name="message" placeholder="Message" required></textarea><br><br>
+    <input type="text" name="name" placeholder="Name" required>
+    <input type="email" name="email" placeholder="Email" required>
+    <textarea name="message" placeholder="Message" required></textarea>
 
-  <button type="submit">Send</button>
+    <button type="submit">Send</button>
+  </form>
 
-</form>
+  <div class="success-message" id="success">
+    Message sent successfully
+  </div>
+
+</div>
+
+<script>
+const form = document.getElementById("form");
+const success = document.getElementById("success");
+
+form.addEventListener("submit", function(e) {
+  e.preventDefault();
+
+  const data = new FormData(form);
+
+  fetch("https://api.web3forms.com/submit", {
+    method: "POST",
+    body: data
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      form.reset();
+      success.style.display = "block";
+    } else {
+      alert("Something went wrong.");
+    }
+  })
+  .catch(() => alert("Error submitting form"));
+});
+</script>
 
 </body>
 </html>
